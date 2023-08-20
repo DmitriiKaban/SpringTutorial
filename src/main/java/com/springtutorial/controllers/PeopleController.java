@@ -1,7 +1,9 @@
 package com.springtutorial.controllers;
 
 import com.springtutorial.dao.PersonDAO;
+import com.springtutorial.models.Book;
 import com.springtutorial.models.Person;
+import com.springtutorial.utils.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/people")
@@ -16,9 +19,12 @@ public class PeopleController {
 
     private final PersonDAO personDAO;
 
+    private final PersonValidator personValidator;
+
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
         this.personDAO = personDAO;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
@@ -33,6 +39,14 @@ public class PeopleController {
 
         // show a person by id
         model.addAttribute("person", personDAO.show(id));
+
+        List<Book> books = personDAO.getBooks(id);
+        for(Book b: books)
+            System.out.println(b);
+        if(!books.isEmpty()) {
+            model.addAttribute("books", books);
+        }
+
         return "people/show";
     }
 
@@ -45,6 +59,8 @@ public class PeopleController {
 
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+
+        personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
             return "people/new"; // return
@@ -61,8 +77,10 @@ public class PeopleController {
         return "people/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, @PathVariable("id") int id) {
+
+        personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
             return "people/edit";
