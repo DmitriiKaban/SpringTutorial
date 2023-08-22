@@ -1,35 +1,36 @@
 package com.springtutorial.models;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
 public class Person {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // postgres generates
+    @Column(name = "id")
+    private int id;
     @Column(name = "name")
     private String name;
-
-    @Min(value = 0, message = "Age should be greater than 0")
+    @Min(value = 0, message = "Age should be positive")
     @Column(name = "age")
     private int age;
 
     @Column(name = "email")
-    @NotEmpty(message = "Email should not be empty")
+    @NotEmpty(message = "Email should be not empty")
     @Email
     private String email;
 
-    public Person() {
+    @OneToMany(mappedBy = "owner") // field in the class Item that has properties of connection(JoinColumn)
+    private List<Item> items;
 
+    public Person() {
     }
 
     public Person(String name, int age) {
@@ -59,6 +60,14 @@ public class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public String getEmail() {
