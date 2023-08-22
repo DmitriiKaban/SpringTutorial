@@ -33,14 +33,9 @@ public class Person {
     @OneToMany(mappedBy = "owner") // field in the class Item that has properties of connection(JoinColumn)
     private List<Item> items;
 
-    @Column(name = "date_of_birth")
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy") // parses string
-    private Date dateOfBirth;
-
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @Enumerated(EnumType.ORDINAL) // saves list number, so if we change them with places, DB will store wrong data
+             // EnumType.String saves string (happy, sad, ...)
+    private Mood mood;
 
     public Person() {
     }
@@ -50,20 +45,12 @@ public class Person {
         this.age = age;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public Mood getMood() {
+        return mood;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setMood(Mood mood) {
+        this.mood = mood;
     }
 
     public int getId() {

@@ -1,5 +1,6 @@
 package com.springtutorial.services;
 
+import com.springtutorial.models.Mood;
 import com.springtutorial.models.Person;
 import com.springtutorial.repositories.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ public class PeopleService {
     }
 
     public Person findOne(int id) {
+
         return peopleRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public void save(Person person) {
-        person.setCreatedAt(new Date());
 
+        person.setMood(Mood.HAPPY);
         peopleRepository.save(person);
-
     }
 
     @Transactional
