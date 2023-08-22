@@ -23,31 +23,26 @@ public class PeopleController {
 
     @GetMapping()
     public String index(Model model) {
-        // receive people from DAO and send them to the view
         model.addAttribute("people", personDAO.index());
         return "people/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model){
-
-        // show a person by id
+    public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", personDAO.show(id));
         return "people/show";
     }
 
     @GetMapping("/new")
-    // Model Attribute will create a new object Person and will add to attributes to the model, so it can be accepted by our view
     public String newPerson(@ModelAttribute("person") Person person) {
-
         return "people/new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
-
+    public String create(@ModelAttribute("person") @Valid Person person,
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "people/new"; // return
+            return "people/new";
 
         personDAO.save(person);
         return "redirect:/people";
@@ -55,15 +50,13 @@ public class PeopleController {
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-
         model.addAttribute("person", personDAO.show(id));
-
         return "people/edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, @PathVariable("id") int id) {
-
+    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
+                         @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "people/edit";
 
@@ -74,7 +67,6 @@ public class PeopleController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         personDAO.delete(id);
-
         return "redirect:/people";
     }
 }
