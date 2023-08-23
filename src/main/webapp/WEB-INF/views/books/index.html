@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<div th:each="book : ${books}">
+<div th:each="book : ${bookPage.content}">
     <a th:href="@{/books/{id}(id=${book.getId()})}" th:text="${book.getName() + ', ' + book.getAuthorName() + ', ' + book.getYear()}">book</a>
 </div>
 
@@ -14,6 +14,16 @@
 <hr/>
 
 <a href="/books/new">Create new book</a>
+<br>
+<hr/>
+
+<span>Pages:</span>
+<span th:if="${bookPage.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/books(size=${bookPage.size}, page=${pageNumber}, sort_by_year=${param.sort_by_year})}"
+       th:text=${pageNumber}
+       th:class="${pageNumber==bookPage.number + 1} ? active"></a>
+</span>
 
 </body>
 </html>

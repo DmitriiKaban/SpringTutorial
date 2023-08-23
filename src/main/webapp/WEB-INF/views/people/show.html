@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Show</title>
+    <style>
+        .red-text {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <p th:text="${person.getName() + ', ' + person.getYear()}">VALUE</p>
@@ -12,7 +17,8 @@
     <hr/>
     <p><b>Taken books:</b></p>
     <div th:each="book : ${books}">
-        <p th:text="${book.getName() + ', ' + book.getYear()}">books</p>
+        <p th:text="${book.getName() + ', ' + book.getAuthorName() + ', ' + book.getYear()}"
+           th:class="${book.isOutdated()} ? 'red-text' : ''">books</p>
     </div>
 </div>
 

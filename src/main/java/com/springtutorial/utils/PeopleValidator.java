@@ -1,20 +1,19 @@
 package com.springtutorial.utils;
 
-import com.springtutorial.dao.PersonDAO;
+
 import com.springtutorial.models.Person;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springtutorial.services.PeopleService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class PersonValidator implements Validator {
+public class PeopleValidator implements Validator {
 
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
 
-    @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PeopleValidator(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @Override
@@ -24,9 +23,12 @@ public class PersonValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+
         Person person = (Person) o;
 
-        if (personDAO.getPersonByName(person.getName()).isPresent())
+        if (peopleService.findByName(person.getName()).isPresent()){
             errors.rejectValue("name", "", "Such a person already exists!");
+        }
+
     }
 }
